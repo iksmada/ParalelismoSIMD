@@ -15,7 +15,7 @@ to see the file use external application ( graphic viewer)
 #include <stdio.h>
 #include <math.h>
 
-int main()
+int original()
 {
         /* screen ( integer) coordinate */
         int iX,iY;
