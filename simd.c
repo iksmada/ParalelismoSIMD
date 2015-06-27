@@ -18,7 +18,7 @@ to see the file use external application ( graphic viewer)
 int main()
 {
         /* screen ( integer) coordinate */
-		int endOfLoop[8];
+		int endOfLoop[8],endOfLoopBp[8]={-1,-1,-1,-1,-1,-1,-1,-1};
         int iX,iY,i;
         const int iXmax = 16384; 
         const int iYmax = 16384;
@@ -40,8 +40,8 @@ int main()
         char *filename="mandelbrot.ppm";
         static unsigned char color[3];
         /* Z=Zx+Zy*i  ;   Z0 = 0 */
-        double Zx[4], Zy[4];
-        double Zx2[4], Zy2[4]; /* Zx2=Zx*Zx;  Zy2=Zy*Zy  */
+        double Zxbackup[4],Zx[4], Zybackup[4],Zy[4];
+        double Zx2backup[4],Zx2[4], Zy2backup[4],Zy2[4]; /* Zx2=Zx*Zx;  Zy2=Zy*Zy  */
         /*  */
         int Iteration;
         const int IterationMax=256;
@@ -118,8 +118,23 @@ int main()
 								vmovupd endOfLoop[0],ymm1  // salva 0 ou 1 no vetor de int
 
 							}
-
-
+							for(i=0;i<4;i++){
+							if(endOfLoopBp[i]==0){
+								endOfLoop[2*i]=0;
+								 Zy[i]= Zybackup[i];
+								 Zx[i]= Zxbackup[i];
+								Zx2[i]=Zx2backup[i];
+								Zy2[i]=Zy2backup[i];
+							}
+							else
+								if(endOfLoop[i]==0){
+									endOfLoopBp[2*i]=0;
+									Zybackup[i] = Zy[i];
+									Zxbackup[i] = Zx[i];
+									Zx2backup[i]=Zx2[i];
+									Zy2backup[i]=Zy2[i];
+								}
+						}
 							
                             //Zy=2*Zx*Zy + Cy;
                             //Zx=Zx2-Zy2 +Cx;
