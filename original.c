@@ -14,9 +14,8 @@ to see the file use external application ( graphic viewer)
 */
 #include <stdio.h>
 #include <math.h>
-#include <omp.h>
 
-int main1()
+int main()
 {
         /* screen ( integer) coordinate */
         int iX,iY;
@@ -35,7 +34,7 @@ int main1()
         /* it is 24 bit color RGB file */
         const int MaxColorComponentValue=255;
         FILE * fp;
-        char *filename="mandelbrot.ppm";
+        char *filename="_original.ppm";
         static unsigned char color[3];
         /* Z=Zx+Zy*i  ;   Z0 = 0 */
         double Zx, Zy;
@@ -51,11 +50,10 @@ int main1()
         /*write ASCII header to the file*/
         fprintf(fp,"P6\n %d\n %d\n %d\n",iXmax,iYmax,MaxColorComponentValue);
         /* compute and write image data bytes to the file*/
-	   for(iY=0;iY<iYmax;iY++)
+        for(iY=0;iY<iYmax;iY++)
         {
              Cy=CyMin + iY*PixelHeight;
              if (fabs(Cy)< PixelHeight/2) Cy=0.0; /* Main antenna */
-
              for(iX=0;iX<iXmax;iX++)
              {
                         Cx=CxMin + iX*PixelWidth;
