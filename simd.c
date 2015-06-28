@@ -37,7 +37,7 @@ int main()
         /* it is 24 bit color RGB file */
         const int MaxColorComponentValue=255; 
         FILE * fp;
-        char *filename="mandelbrot.ppm";
+        char *filename="_simd_avx.ppm";
         static unsigned char color[3];
         /* Z=Zx+Zy*i  ;   Z0 = 0 */
         double Zxbackup[4],Zx[4], Zybackup[4],Zy[4];
@@ -132,7 +132,7 @@ int main()
 							}
 							else if(endOfLoop[2*i]==0){
 									endOfLoopBp[2*i]=0;
-									endOfLoopBp[2*i+1]=Iteration;
+									endOfLoopBp[2*i+1]=Iteration+1;
 									 //Zybackup[i]= Zy[i];
 									 //Zxbackup[i]= Zx[i];
 									//Zx2backup[i]=Zx2[i];
