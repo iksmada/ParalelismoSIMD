@@ -56,21 +56,22 @@ int main()
         /* compute and write image data bytes to the file*/
         for(iY=0;iY<iYmax;iY++)
         {
-             Cy=CyMin + iY*PixelHeight;
 			 for(i=0;i<4;i++){
-				Cyvet[i]=Cy;
+				Cyvet[i]=CyMin + (iY+i)*PixelHeight;
+				if (fabs(Cyvet[i])< PixelHeight/2) Cyvet[i]=0.0; /* Main antenna */
 			 }
-             if (fabs(Cy)< PixelHeight/2) Cy=0.0; /* Main antenna */
+
              for(iX=0;iX<iXmax;iX=iX+4)
              {         
-                        Cx=CxMin + iX*PixelWidth;
                         /* initial value of orbit = critical point Z= 0 */
 						for(i=0;i<4;i++){
-						Cxvet[i]=Cx;
+						endOfLoopBp[2*i]=-1;
+						endOfLoop[2*i]=-1;
+						Cxvet[i]=CxMin + (iX+i)*PixelWidth;
                         Zx[i]=0.0;
                         Zy[i]=0.0;
-                        Zx2[i]=Zx[i]*Zx[i];
-                        Zy2[i]=Zy[i]*Zy[i];
+                        Zx2[i]=Zx[i]*Zx[i]; //falta paralelizar
+                        Zy2[i]=Zy[i]*Zy[i];	// falta paralelizar
 
 						}
                         /* */
@@ -114,27 +115,30 @@ int main()
 								vaddpd ymm1,ymm2,Zy2[0] // multiplica ymm2*4 double no zx
 								vmovaps ymm2,ymm1 //coloca no ymm2 o ymm1
 								vmovupd ymm3,ER2vet[0]
-								vcmpltpd ymm1,ymm3,ymm2 // compara com LT , para setar para less than
+								vcmpltpd ymm1,ymm2,ymm3 // compara com LT , para setar para less than
 								vmovupd endOfLoop[0],ymm1  // salva 0 ou 1 no vetor de int
 
 							}
+
+							//salvando valor ou nao dependendo se ja atingiu condicao de parada anteriormente e agr
 							for(i=0;i<4;i++){
-							if(endOfLoopBp[i]==0){
+							if(endOfLoopBp[2*i]==0){
 								endOfLoop[2*i]=0;
-								 Zy[i]= Zybackup[i];
-								 Zx[i]= Zxbackup[i];
-								Zx2[i]=Zx2backup[i];
-								Zy2[i]=Zy2backup[i];
+								 //Zy[i]= Zybackup[i];
+								 //Zx[i]= Zxbackup[i];
+								//Zx2[i]=Zx2backup[i];
+								//Zy2[i]=Zy2backup[i];
+								
 							}
-							else
-								if(endOfLoop[i]==0){
+							else if(endOfLoop[2*i]==0){
 									endOfLoopBp[2*i]=0;
-									Zybackup[i] = Zy[i];
-									Zxbackup[i] = Zx[i];
-									Zx2backup[i]=Zx2[i];
-									Zy2backup[i]=Zy2[i];
+									endOfLoopBp[2*i+1]=Iteration;
+									 //Zybackup[i]= Zy[i];
+									 //Zxbackup[i]= Zx[i];
+									//Zx2backup[i]=Zx2[i];
+									//Zy2backup[i]=Zy2[i];
 								}
-						}
+							}
 							
                             //Zy=2*Zx*Zy + Cy;
                             //Zx=Zx2-Zy2 +Cx;
@@ -143,20 +147,26 @@ int main()
 
                         };
                         /* compute  pixel color (24 bit = 3 bytes) */
-                        if (Iteration==IterationMax)
-                        { /*  interior of Mandelbrot set = black */
-                           color[0]=0;
-                           color[1]=0;
-                           color[2]=0;                           
-                        }
-                        else 
-                        { /* exterior of Mandelbrot set = white */
-                             color[0]=((IterationMax-Iteration) % 8) *  63;  /* Red */
-                             color[1]=((IterationMax-Iteration) % 4) * 127;  /* Green */ 
-                             color[2]=((IterationMax-Iteration) % 2) * 255;  /* Blue */
-                        };
+
+
+						for(i=0;i<4;i++){
+							if (endOfLoopBp[2*i]!=0)
+							{ /*  interior of Mandelbrot set = black */
+								color[0]=0;
+								color[1]=0;
+								color[2]=0;                           
+							}
+							else 
+							{ /* exterior of Mandelbrot set = white */ //falta paralelizar
+								color[0]=((IterationMax-endOfLoopBp[2*i+1]) % 8) *  63;  /* Red */ 
+								color[1]=((IterationMax-endOfLoopBp[2*i+1]) % 4) * 127;  /* Green */ 
+								color[2]=((IterationMax-endOfLoopBp[2*i+1]) % 2) * 255;  /* Blue */
+							}
+						
                         /*write color to the file*/
-                        fwrite(color,1,3,fp);
+							fwrite(color,1,3,fp);
+						}
+						
                 }
         }
         fclose(fp);
