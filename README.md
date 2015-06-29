@@ -18,6 +18,16 @@ Zy2=Zy*Zy;
 
 <img src="http://www.gama-ksa.com/wp-content/uploads/2014/11/22520129_l.jpg"></img>
 
+<hr>
+<h4>Desempenho</h4>
+Grafico comparativo do tempo de execucao
+
+<hr>
+<h4>Créditos</h4>
+
+Trabalho apresentado ao Professor Ricardo Menotti do Departamento de Computação da UFSCar, que nos forneceu o algoritmo; a todos qus nos ajudaram a sanar dúvidas, aos colegas do semestre passado que usamos como base para cosntruir nossa Wiki e Make File, * https://github.com/menotti/arq2asm/
+
+
 ParalelismoSIMD
 
 Repositório destinado para o projeto final do curso Laboratório de Arquiteura e Organização de Computadores 2.
