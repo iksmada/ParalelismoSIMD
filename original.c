@@ -14,9 +14,12 @@ to see the file use external application ( graphic viewer)
 */
 #include <stdio.h>
 #include <math.h>
+#include <time.h>
 
 int main()
 {
+        clock_t start, end;
+		double cpu_time_used;
         /* screen ( integer) coordinate */
         int iX,iY;
         const int iXmax = 16384;
@@ -50,6 +53,7 @@ int main()
         /*write ASCII header to the file*/
         fprintf(fp,"P6\n %d\n %d\n %d\n",iXmax,iYmax,MaxColorComponentValue);
         /* compute and write image data bytes to the file*/
+		start = clock();
         for(iY=0;iY<iYmax;iY++)
         {
              Cy=CyMin + iY*PixelHeight;
@@ -87,6 +91,10 @@ int main()
                         fwrite(color,1,3,fp);
                 }
         }
+        end = clock();
+
+		cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+		printf("time = %f seconds\n", cpu_time_used);
         fclose(fp);
         return 0;
 }
