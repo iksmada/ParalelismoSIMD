@@ -21,41 +21,34 @@ int main()
 		clock_t start, end;
 		double cpu_time_used;
         /* screen ( integer) coordinate */
-		int endOfLoop[8],endOfLoopBp[4],vetMenos1[4]={-1,-1,-1,-1};
-        int iX,iY,i;
+		int endOfLoop[8];
+		int iX,iY,i;
         const int iXmax = 16384; 
         const int iYmax = 16384;
         /* world ( double) coordinate = parameter plane*/
-        //double Cx,Cy;
-		double Cxvet[4],Cyvet[4];
-		//double ixVet[4];
-        const double CxMin=-2.5;
-		//const double CxMinVet[4]={-2.5,-2.5,-2.5,-2.5};
-        const double CxMax=1.5;
+        double Cxvet[4],Cyvet[4];
+		const double CxMin=-2.5;
+		const double CxMax=1.5;
         const double CyMin=-2.0;
         const double CyMax=2.0;
-		const double vet2[4]={2.0,2.0,2.0,2.0},vet0[4]={0.0,0.0,0.0,0.0},vetI[4]={0.0,1.0,2.0,3.0}; 
-        /* */
+		const double vet2[4]={2.0,2.0,2.0,2.0},vet0[4]={0.0,0.0,0.0,0.0};
         double PixelWidth=(CxMax-CxMin)/iXmax;
-		//double pixelWidthVet[4]={PixelWidth,PixelWidth,PixelWidth,PixelWidth};
-        double PixelHeight=(CyMax-CyMin)/iYmax;
+		double PixelHeight=(CyMax-CyMin)/iYmax;
         /* color component ( R or G or B) is coded from 0 to 255 */
         /* it is 24 bit color RGB file */
         const int MaxColorComponentValue=255; 
         FILE * fp;
         char *filename="_simd_avx.ppm";
-        static unsigned char color[16];
-        /* Z=Zx+Zy*i  ;   Z0 = 0 */
+        static unsigned char color[3];
         double Zx[4],Zy[4];
         double Zx2[4],Zy2[4]; /* Zx2=Zx*Zx;  Zy2=Zy*Zy  */
-        /*  */
         int Iteration;
-        const int IterationMax=256;
-		const short int iterationMaxVet[16]={256,256,256,256,256,256};
-		short int colorMulti[8]={63,127,255,63,127,255}; 
-		short int iterationVet[16];
-		const short int mascaraMod[16]={7,3,1,7,3,1};
-		const short int mascaraWrapAround[16]={0xfeff,0xfeff,0xfeff,0xfeff,0xfeff,0xfeff};
+        const int IterationMax = 256;
+		const short int iterationMaxVet[16]={256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256};
+		//short int colorMulti[8]={63,127,255,63,127,255}; 
+		int short iterationVet[16];
+		const short int mascaraMod[8]={7,3,1,0,7,3,1};
+		//const short int mascaraWrapAround[16]={0xfeff,0xfeff,0xfeff,0xfeff,0xfeff,0xfeff};
         /* bail-out value , radius of circle ;  */
         const double EscapeRadius=2;
         double ER2=EscapeRadius*EscapeRadius;
@@ -76,16 +69,10 @@ int main()
              for(iX=0;iX<iXmax;iX=iX+4)
              {         
                         
-				 /*for(i=0;i<4;i++){
-					 ixVet[i]=(double)iX;
-				 }*/
-
 				 __asm{
-					 vmovdqu xmm1,vetMenos1[0] //endOfLoopBp[i]=-1;
-					 vmovdqu endOfLoopBp[0],xmm1
 
-					 //vmovupd ymm1, iterationMaxVet[0] //iterationVet[0..15]= iterationvetmax[0..15]
-					 //vmovupd iterationVet[0], ymm1
+					 vmovupd ymm1, iterationMaxVet[0] //iterationVet[0..15]= iterationvetmax[0..15]
+					 vmovupd iterationVet[0], ymm1
 
 
 
@@ -96,36 +83,28 @@ int main()
 					 vmovupd Cxvet[0],ymm1*/
 
 					 vmovupd ymm1, vet0[0]
-					 vmovupd Zy[0],ymm1
-					 vmovupd Zx[0],ymm1
-					 vmovupd Zx2[0],ymm1
+					 vmovupd Zy[0],ymm1		   //Zx[i]=0.0;
+					 vmovupd Zx[0],ymm1		  //Zy[i]=0.0;
+					 vmovupd Zx2[0],ymm1	 //Zx2[i]=0.0;
 					 vmovupd Zy2[0],ymm1
 
 				 }
 						for(i=0;i<4;i++){
-						//endOfLoopBp[i]=-1;
-						//endOfLoop[2*i]=-1;
 						Cxvet[i]=CxMin + (iX+i)*PixelWidth;
-                        //Zx[i]=0.0;
-                        //Zy[i]=0.0;
-                        //Zx2[i]=0.0; 
-                        //Zy2[i]=0.0;
+                                                                
 						}
                         
-                        for (Iteration=0;Iteration<IterationMax &&( endOfLoopBp[0]!=0 
-																||  endOfLoopBp[1]!=0
-																||  endOfLoopBp[2]!=0 
-																||  endOfLoopBp[3]!=0 )/*((Zx2+Zy2)<ER2)*/ 
+                        for (Iteration=0;Iteration < IterationMax &&( iterationVet[0]==256 
+																||  iterationVet[4]==256
+																||  iterationVet[8]==256 
+																||  iterationVet[12]==256 )/*((Zx2+Zy2)<ER2)*/ 
 																;Iteration++)
                         {
 
 							__asm {
-								//vmovupd ymm1, Zx[0]
 								vmovupd ymm2, Zy[0] //coloca 4 double no ymm2 
 								vmulpd ymm1,ymm2,Zx[0] // multiplica ymm2*4 double no zx
-								//vmovaps ymm2,ymm1 //coloca no ymm2 o ymm1
 								vmulpd ymm2,ymm1,vet2[0] // multiplica por 2
-								//vmovaps ymm2,ymm1
 								vaddpd ymm1,ymm2,Cyvet[0]
 								vmovupd Zy[0],ymm1
 
@@ -133,7 +112,6 @@ int main()
 								// atribui Zx
 								vmovupd ymm2, Zx2[0] //coloca 4 double no ymm2 
 								vsubpd ymm3,ymm2,Zy2[0] // multiplica ymm2*4 double no zx
-								//vmovaps ymm2,ymm1 //coloca no ymm2 o ymm1
 								vaddpd ymm1,ymm3,Cxvet[0] //soma com cx
 								vmovupd Zx[0],ymm1 //salva em zx
 
@@ -150,8 +128,6 @@ int main()
 								//fazer  comparacao ((Zx2+Zy2)<ER2) e atribuir endOfLoop
 								vmovupd ymm2, Zx2[0] //coloca 4 double no ymm2 
 								vaddpd ymm3,ymm2,Zy2[0] // multiplica ymm2*4 double no zx
-								//vmovaps ymm2,ymm1 //coloca no ymm2 o ymm1
-								//vmovupd ymm3,ER2vet[0]
 								vcmpltpd ymm1,ymm3,ER2vet[0] // compara com LT , para setar para less than
 								vmovupd endOfLoop[0],ymm1  // salva 0 ou 1 no vetor de int
 
@@ -159,11 +135,10 @@ int main()
 
 							//salvando valor ou nao dependendo se ja atingiu condicao de parada anteriormente e agr
 							for(i=0;i<4;i++){
-								if(endOfLoopBp[i]!=0 && endOfLoop[2*i]==0){
-									endOfLoopBp[i]=0;
-									iterationVet[3*i]  =Iteration+1;
-									//iterationVet[3*i+1]=Iteration+1;
-									//iterationVet[3*i+2]=Iteration+1;
+								if(iterationVet[4*i]==256 && endOfLoop[2*i]==0){
+									iterationVet[4*i] =Iteration+1;
+									iterationVet[4*i+1]=Iteration+1;
+									iterationVet[4*i+2]=Iteration+1;
 								}
 							}
 							
@@ -176,8 +151,8 @@ int main()
                         /* compute  pixel color (24 bit = 3 bytes) */
 
 
-						for(i=0;i<4;i++){
-							if (endOfLoopBp[i]!=0)
+						for(i=0;i<16;i=i+4){
+							if (iterationVet[i]==256)
 							{ //  interior of Mandelbrot set = black
 								color[0]=0;
 								color[1]=0;
@@ -185,10 +160,29 @@ int main()
 							}
 							else 
 							{ // exterior of Mandelbrot set = white 
+
+								__asm {
+									mov eax,i
+									cmp eax,4
+									je FIM
+									cmp eax,12
+									je FIM
+									lea edi, iterationVet
+									
+									shl eax,1
+									add edi, eax
+
+									vmovdqu xmm2,iterationMaxVet[0]
+									vpsubw xmm1,xmm2,[edi]
+									vpand xmm2,xmm1,mascaraMod[0]
+									vmovdqu [edi],xmm2
+									FIM:
+
+								}
 								
-								color[0]=((IterationMax-iterationVet[3*i]) % 8) *  63;  // Red  
-								color[1]=((IterationMax-iterationVet[3*i]) % 4) * 127;  // Green  
-								color[2]=((IterationMax-iterationVet[3*i]) % 2) * 255;  // Blue 
+								color[0]=(iterationVet[i]) *  63;  // Red  
+								color[1]=(iterationVet[i+1]) * 127;  // Green  
+								color[2]=(iterationVet[i+2]) * 255;  // Blue 
 							}
 							
 						
