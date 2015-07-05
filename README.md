@@ -29,8 +29,8 @@ Sistemas de memória compartilhada são sistemas com multiprocessadores, mas cad
 ![My imagem_OpenMP] (https://github.com/iksmada/ParalelismoSIMD/blob//master/imagem_OpenMP.png)
 
 Para o uso da OpenMP, utilizamos as seguintes instruções:
-#include <omp.h>
-#pragma omp parallel for
+"#include <omp.h>"
+"#pragma omp parallel for"
 
 <hr>
 <h4>Desempenho</h4>
