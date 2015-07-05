@@ -17,8 +17,8 @@ Zx=Zx2-Zy2 +Cx;
 Zx2=Zx*Zx;
 Zy2=Zy*Zy;  
 
-![My simd_imagem] (https://github.com/iksmada/ParalelismoSIMD/blob//master/simd_imagem.jpg)
-<img src="http://www.gama-ksa.com/wp-content/uploads/2014/11/22520129_l.jpg"></img>
+![My simd_imagem] (https://github.com/iksmada/ParalelismoSIMD/blob//master/simd_imagem.png)
+
 
 <hr>
 <h4>OpenMP</h4>
