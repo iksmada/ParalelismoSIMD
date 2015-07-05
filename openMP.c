@@ -40,6 +40,9 @@ int main(){
     FILE * fp;
     char *filename="_openmp.ppm";
     static unsigned char color[3];
+    static unsigned char vetor[49152];
+    int indice;
+    int i;
     /* Z=Zx+Zy*i  ;   Z0 = 0 */
     double Zx, Zy;
     double Zx2, Zy2; /* Zx2=Zx*Zx;  Zy2=Zy*Zy  */
@@ -61,7 +64,8 @@ int main(){
 	   Cy=CyMin + iY*PixelHeight;
 	   if (fabs(Cy)< PixelHeight/2) 
 		  Cy=0.0; /* Main antenna */
-#pragma omp parallel for
+	   indice = 0;
+	   #pragma omp parallel for private(iX, Iteration)
 	   for(iX=0;iX<iXmax;iX++)
 	   {
 		  Cx=CxMin + iX*PixelWidth;
@@ -82,18 +86,26 @@ int main(){
 		  /* compute  pixel color (24 bit = 3 bytes) */
 		  if (Iteration==IterationMax)
 		  { /*  interior of Mandelbrot set = black */
-			 color[0]=0;
-			 color[1]=0;
-			 color[2]=0;
+			 vetor[indice]=0;
+			 vetor[indice + 1]=0;
+			 vetor[indice + 2]=0;
 		  }
 		  else
 		  { /* exterior of Mandelbrot set = white */
-			 color[0]=((IterationMax-Iteration) % 8) *  63;  /* Red */
-			 color[1]=((IterationMax-Iteration) % 4) * 127;  /* Green */
-			 color[2]=((IterationMax-Iteration) % 2) * 255;  /* Blue */
+			 vetor[indice]=((IterationMax-Iteration) % 8) *  63;  /* Red */
+			 vetor[indice + 1]=((IterationMax-Iteration) % 4) * 127;  /* Green */
+			 vetor[indice + 2]=((IterationMax-Iteration) % 2) * 255;  /* Blue */
 		  };
+		  //fwrite(color,1,3,fp);
+		  indice = indice + 3;
+	   }
+	   indice = 0;
+	   for(i =0; i< iXmax; i++){
+		  color[0] = vetor[indice];
+		  color[1] = vetor[indice + 1];
+		  color[2] = vetor[indice + 2];
+
 		  fwrite(color,1,3,fp);
-		
 	   }
 		   
     }
