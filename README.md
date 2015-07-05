@@ -9,6 +9,7 @@ Apartir deste desenvolvemos duas versoes de codigo com paralelização, uma usan
 <hr>
 <h4>SIMD</h4>
 
+Instruções SIMD (Single Instruction Multiple Data) são funções primitivas para paralelizar o processamento de dados sobre o nível de registro de CPU.
 Esta versão usa instrucoes AVX, uma das ultimas gerações da Intel, em que foi possivel usar reistradores de 256 bits, e fazendo paralelamente calculos com quatro Double's , variavel de 8 bytes cada.
 Segue abaixo codigo otimizado do bloco original 
 Zy=2*Zx*Zy + Cy;
@@ -17,6 +18,16 @@ Zx2=Zx*Zx;
 Zy2=Zy*Zy;  
 
 <img src="http://www.gama-ksa.com/wp-content/uploads/2014/11/22520129_l.jpg"></img>
+
+<hr>
+<h4>OpenMP</h4>
+
+OpenMP (Open Multi-Processing) é uma API (Application Programming Interface) para programação de multi-processos de memoria compartilhada em múltiplas plataformas.
+Sistemas de memória compartilhada são sistemas com multiprocessadores, mas cada um está compartilhando um único subsistema de memória.
+
+Para o uso da OpenMP, utilizamos as seguintes instruções:
+#include <omp.h>
+#pragma omp parallel for
 
 <hr>
 <h4>Desempenho</h4>
