@@ -17,6 +17,7 @@ Zx=Zx2-Zy2 +Cx;
 Zx2=Zx*Zx;
 Zy2=Zy*Zy;  
 
+[My imagem_simd.png]
 <img src="http://www.gama-ksa.com/wp-content/uploads/2014/11/22520129_l.jpg"></img>
 
 <hr>
