@@ -17,7 +17,7 @@ Zx=Zx2-Zy2 +Cx;
 Zx2=Zx*Zx;
 Zy2=Zy*Zy;  
 
-[My simd_imagem] (https://github.com/iksmada/ParalelismoSIMD/simd_imagem.png)
+[My simd_imagem] (https://github.com/iksmada/ParalelismoSIMD/simd_imagem.jpg)
 <img src="http://www.gama-ksa.com/wp-content/uploads/2014/11/22520129_l.jpg"></img>
 
 <hr>
