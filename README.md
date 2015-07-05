@@ -36,6 +36,10 @@ Grafico comparativo do tempo de execução
 
 ![My grafico] (https://github.com/iksmada/ParalelismoSIMD/blob//master/grafico.jpg)
 
+Apartir do gráfico podemos notar que quando executamos em alto desempenho temos um rendimento melhor no uso do SIMD seguido do uso da OpenMP e por ultimo o Originial.
+Nesse caso era o resultado esperado, apesar que o resultado da openMP não foi tão satisfatorio quanto o esperado. Isso se deve ao fato de não conseguir uma autonomia entre cada interação no "for" para melhor a quebra entre as threads.
+
+
 <hr>
 <h4>Créditos</h4>
 
