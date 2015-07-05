@@ -38,7 +38,7 @@ Grafico comparativo do tempo de execução
 
 Apartir do gráfico podemos notar que quando executamos em alto desempenho temos um desempenho melhor no uso do SIMD seguido do uso da OpenMP e por ultimo o Original.
 Nesse caso era o resultado esperado, apesar que o resultado da openMP não foi tão satisfatorio quanto o esperado. Isso se deve ao fato de não conseguir uma autonomia entre cada interação no "for" para melhor a quebra entre as threads.
-Já quando executamos em Economia de Energia, continuamos com o melhor desempenho com o uso do SIMD mas o uso da OpenMP tem desempenho pior que o do arquivo Original, isso se deu ao que com a economia de energia temos um uso menor dos processadores o que prejudica o desempenho da OpenMP.
+Já quando executamos em Economia de Energia, continuamos com o melhor desempenho com o uso do SIMD mas o uso da OpenMP tem desempenho pior que o do arquivo Original, isso se deu ao que com a economia de energia temos um uso menor dos processadores, prejudicando o desempenho da OpenMP.
 
 
 <hr>
@@ -46,6 +46,7 @@ Já quando executamos em Economia de Energia, continuamos com o melhor desempenh
 
 Trabalho apresentado ao Professor Ricardo Menotti do Departamento de Computação da UFSCar, que nos forneceu o algoritmo; a todos qus nos ajudaram a sanar dúvidas, aos colegas do semestre passado que usamos como base para cosntruir nossa Wiki e Make File, * https://github.com/menotti/arq2asm/
 
+Agradecemos as imagens e referencia literaria que foram retiradas do site: http://www.codeproject.com/Articles/19065/Begin-Parallel-Programming-With-OpenMP
 
 ParalelismoSIMD
 
