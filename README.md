@@ -26,6 +26,8 @@ Zy2=Zy*Zy;
 OpenMP (Open Multi-Processing) é uma API (Application Programming Interface) para programação de multi-processos de memoria compartilhada em múltiplas plataformas.
 Sistemas de memória compartilhada são sistemas com multiprocessadores, mas cada um está compartilhando um único subsistema de memória.
 
+![My imagem_OpenMP] (https://github.com/iksmada/ParalelismoSIMD/blob//master/imagem_OpenMP.png)
+
 Para o uso da OpenMP, utilizamos as seguintes instruções:
 #include <omp.h>
 #pragma omp parallel for
